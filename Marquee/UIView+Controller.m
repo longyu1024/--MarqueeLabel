@@ -12,7 +12,6 @@
 
 - (id)firstAvailableViewController
 {
-    // convenience function for casting and to "mask" the recursive function
     return [self traverseResponderChainForFirstViewController];
 }
 

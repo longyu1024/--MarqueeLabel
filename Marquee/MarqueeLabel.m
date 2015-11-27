@@ -99,6 +99,8 @@ NSString *const kMarqueeLabelAnimationCompletionBlock = @"MarqueeLabelAnimationC
         _marqueeLabel.layer.anchorPoint = CGPointMake(0.0f, 0.0f);
         
         [self addSubview:_marqueeLabel];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartLabel) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(shutdownLabel) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
 }
 
@@ -112,7 +114,7 @@ NSString *const kMarqueeLabelAnimationCompletionBlock = @"MarqueeLabelAnimationC
             self.marqueeLabel.layer.timeOffset = 0.0;
             self.marqueeLabel.layer.beginTime = 0.0;
             self.marqueeLabel.layer.beginTime = [self.marqueeLabel.layer convertTime:CACurrentMediaTime() fromLayer:nil] - labelPausedTime;
-            // Unpause gradient fade animation
+
             CFTimeInterval gradientPauseTime = self.layer.mask.timeOffset;
             self.layer.mask.speed = 1.0;
             self.layer.mask.timeOffset = 0.0;
@@ -139,6 +141,15 @@ NSString *const kMarqueeLabelAnimationCompletionBlock = @"MarqueeLabelAnimationC
             _isPaused = YES;
         }
     }
+}
+
+- (void)restartLabel {
+    [self scroll];
+}
+
+- (void)shutdownLabel {
+    [self.layer.mask removeAllAnimations];
+    [self.marqueeLabel.layer removeAllAnimations];
 }
 
 #pragma mark - update marqueeLabel
